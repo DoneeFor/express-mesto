@@ -47,12 +47,11 @@ module.exports.updateUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         return res.status(400).send({ message: 'Произошла ошибка валидации' });
-      }
-      res.status(500).send(`Произошла ошибка: ${err.name} ${err.message}`);
+      } return res.status(500).send(`Произошла ошибка: ${err.name} ${err.message}`);
     });
 };
 
-module.exports.updateAvatar = (req, res, next) => {
+module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar },
     { new: true, runValidators: true })
     .then((user) => {
@@ -65,6 +64,5 @@ module.exports.updateAvatar = (req, res, next) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
       } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    })
-    .catch(next);
+    });
 };
