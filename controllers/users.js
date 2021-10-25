@@ -50,7 +50,7 @@ module.exports.getUserById = (req, res) => {
     });
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -69,7 +69,7 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Переданы некорректные данные при создании пользователя.');
       } else if (err.name === 'MongoServerError' && err.code === 11000) {
-        throw new ConflictError('Этот email уже зарегистрирован.');
+        next(new ConflictError('Этот email уже зарегистрирован.'));
       }
       return res.status(500).send({ message: err.message });
     });
